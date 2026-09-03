@@ -1,0 +1,23 @@
+name: Squash History
+on:
+  push:
+    branches: [main]
+jobs:
+  squash:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Squash all commits into one
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git checkout --orphan temp_branch
+          git add -A
+          git commit -m "Aktueller Stand"
+          git branch -D main
+          git branch -m main
+          git push --force origin main
